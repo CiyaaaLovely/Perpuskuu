@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User - Perpustakaan Umum</title>
+    <!-- font awesome buat icon-icon biar keliatan keren -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- css external biar gak panjang disini -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- SIDEBAR KIRI BUAT USER -->
+        <!-- berisi foto profil, nama user, sama menu navigasi user -->
+        <aside class="sidebar">
+            <div class="user-profile">
+                <div class="avatar-retro"><i class="fas fa-user-graduate"></i></div>
+                <h3 id="displayUser">Pengunjung</h3>
+                <span class="badge-role"><i class="fas fa-user"></i> Member</span>
+            </div>
+            <ul class="sidebar-menu">
+                <!-- menu beranda buat liat ucapan selamat datang -->
+                <li onclick="showSection('dashboard')" id="menu-dashboard" class="active">
+                    <i class="fas fa-home"></i> Beranda
+                </li>
+                <!-- menu daftar buku buat liat koleksi dan pinjam -->
+                <li onclick="showSection('buku')" id="menu-buku">
+                    <i class="fas fa-book-open"></i> Daftar Buku
+                </li>
+                <!-- menu peminjaman saya buat liat riwayat pinjam -->
+                <li onclick="showSection('peminjaman')" id="menu-peminjaman">
+                    <i class="fas fa-history"></i> Peminjaman Saya
+                </li>
+                <!-- ========== MENU GANTI PASSWORD (TAMBAHAN) ========== -->
+                <li onclick="openChangePasswordModal()" id="changePasswordMenu">
+                    <i class="fas fa-key"></i> Ganti Password
+                </li>
+                <!-- tombol logout buat keluar dari sistem -->
+                <li id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Keluar
+                </li>
+            </ul>
+        </aside>
+
+        <!-- MAIN CONTENT / ISI HALAMAN USER -->
+        <!-- tempat semua konten tampil pas klik menu -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h2 id="sectionTitle">📖 BERANDA</h2>
+            </header>
+
+            <!-- SECTION BERANDA - tampilan ucapan selamat datang buat user -->
+            <div id="section-dashboard" class="content-section">
+                <div class="welcome-box retro-box">
+                    <i class="fas fa-hand-peace"></i>
+                    <h1>Selamat Datang!</h1>
+                    <p>Silakan jelajahi koleksi buku dan pinjam buku favorit Anda.</p>
+                </div>
+            </div>
+
+            <!-- SECTION DAFTAR BUKU - nampilin semua koleksi yang bisa dipinjam -->
+            <div id="section-buku" class="content-section" style="display:none;">
+                <div class="section-header">
+                    <h3><i class="fas fa-book-open"></i> Koleksi Buku</h3>
+                </div>
+                <!-- search bar buat nyari buku berdasarkan judul atau penulis -->
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchBukuUser" placeholder="Cari judul atau penulis..." onkeyup="filterBooksUser()">
+                </div>
+                <!-- tabel daftar buku -->
+                <div class="table-container retro-box">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Judul</th>
+                                <th>Penulis</th>
+                                <th>Kategori</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBukuUser"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION PEMINJAMAN SAYA - nampilin riwayat buku yang pernah/belum dikembalikan -->
+            <!-- VERSI LENGKAP DENGAN TANGGAL PINJAM, DUE DATE, DAN DENDA -->
+            <div id="section-peminjaman" class="content-section" style="display:none;">
+                <div class="section-header">
+                    <h3><i class="fas fa-history"></i> Riwayat Peminjaman Saya</h3>
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchPeminjamanUser" placeholder="Cari judul buku..." onkeyup="filterPeminjamanUser()">
+                </div>
+                <div class="table-container retro-box">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Judul Buku</th>
+                                <th>Status</th>
+                                <th>Tanggal Pinjam</th>
+                                <th>Batas Kembali</th>
+                                <th>Denda</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablePeminjamanUser"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL CRUD - buat form ganti password -->
+    <div id="crudModal" class="modal">
+        <div class="modal-content retro-box">
+            <h3 id="modalTitle"><i class="fas fa-edit"></i> Form</h3>
+            <form id="crudForm">
+                <div id="formFields"></div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-retro"><i class="fas fa-save"></i> Simpan</button>
+                    <button type="button" class="btn-retro btn-cancel" onclick="closeModal()"><i class="fas fa-times"></i> Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL KONFIRMASI - buat nanya "yakin?" sebelum hapus/pinjam/kembali -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content retro-box confirm-box">
+            <h3><i class="fas fa-question-circle"></i> Konfirmasi</h3>
+            <p id="confirmMessage">Apakah Anda yakin?</p>
+            <div class="modal-buttons">
+                <button id="confirmYesBtn" class="btn-retro btn-success"><i class="fas fa-check"></i> Ya</button>
+                <button class="btn-retro btn-cancel" onclick="closeConfirm()"><i class="fas fa-times"></i> Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOADING OVERLAY - muncul pas lagi proses loading -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Memproses...</p>
+    </div>
+
+    <!-- JS utama buat semua fungsi -->
+    <script src="script.js"></script>
+    <!-- library buat export pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- plugin auto table buat pdf biar rapi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</body>
+</html>

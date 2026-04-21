@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Perpustakaan Umum</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card retro-box">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <h2>PERPUSTAKAAN UMUM</h2>
+                <p>Vintage Library System</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-retro">
+                    <i class="fas fa-sign-in-alt"></i> MASUK
+                </button>
+                <p class="toggle-link">
+                    Belum punya akun? <a href="#" onclick="toggleForm()">Daftar Sekarang</a>
+                </p>
+            </form>
+
+            <form id="registerForm" style="display: none;">
+                <div class="input-group">
+                    <i class="fas fa-user-plus"></i>
+                    <input type="text" id="regUsername" placeholder="Username Baru" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="regPassword" placeholder="Password" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-user-tag"></i>
+                    <select id="regRole">
+                        <option value="user">Pengunjung (User)</option>
+                        <option value="admin">Admin Perpustakaan</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-retro">
+                    <i class="fas fa-user-check"></i> DAFTAR
+                </button>
+                <p class="toggle-link">
+                    Sudah punya akun? <a href="#" onclick="toggleForm()">Kembali Login</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Memproses...</p>
+    </div>
+<script src="script.js"></script></body>
+</html>
